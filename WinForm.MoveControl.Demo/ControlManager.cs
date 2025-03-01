@@ -36,11 +36,6 @@ namespace WinForm.MoveControl.Demo
                 control.Size = item.Size;
                 control.ForeColor = System.Drawing.ColorTranslator.FromHtml(item.ForeColor);
                 control.BackColor = System.Drawing.ColorTranslator.FromHtml(item.BackColor);
-                control.MouseClick += (obj, arg) =>
-                {
-               
-                        propertyGrid.SelectedObject = obj;
-                };
                 panel1.Controls.Add(control);
             }
         }

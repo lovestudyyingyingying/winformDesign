@@ -29,22 +29,24 @@ namespace WinForm.MoveControl.Demo
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("button");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("label");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("控件", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("button");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("label");
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("number");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("控件", new System.Windows.Forms.TreeNode[] {
+            treeNode17,
+            treeNode18,
+            treeNode19});
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.uiNavMenu1 = new Sunny.UI.UINavMenu();
             this.flowLayoutPanel1 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnVertialSame = new System.Windows.Forms.Button();
+            this.btnSameMiddle = new System.Windows.Forms.Button();
             this.btnSameMax = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.btnSameMiddle = new System.Windows.Forms.Button();
-            this.btnVertialSame = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -69,15 +71,17 @@ namespace WinForm.MoveControl.Demo
             this.uiNavMenu1.ItemHeight = 30;
             this.uiNavMenu1.Location = new System.Drawing.Point(0, 0);
             this.uiNavMenu1.Name = "uiNavMenu1";
-            treeNode1.ImageIndex = 61451;
-            treeNode1.Name = "button";
-            treeNode1.Text = "button";
-            treeNode2.Name = "label";
-            treeNode2.Text = "label";
-            treeNode3.Name = "控件";
-            treeNode3.Text = "控件";
+            treeNode17.ImageIndex = 61451;
+            treeNode17.Name = "button";
+            treeNode17.Text = "button";
+            treeNode18.Name = "label";
+            treeNode18.Text = "label";
+            treeNode19.Name = "number";
+            treeNode19.Text = "number";
+            treeNode20.Name = "控件";
+            treeNode20.Text = "控件";
             this.uiNavMenu1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode20});
             this.uiNavMenu1.ShowLines = false;
             this.uiNavMenu1.ShowPlusMinus = false;
             this.uiNavMenu1.ShowRootLines = false;
@@ -94,15 +98,6 @@ namespace WinForm.MoveControl.Demo
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(477, 309);
             this.flowLayoutPanel1.TabIndex = 5;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.DimGray;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 33);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(471, 273);
-            this.panel1.TabIndex = 3;
             // 
             // tableLayoutPanel1
             // 
@@ -131,6 +126,26 @@ namespace WinForm.MoveControl.Demo
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(471, 24);
             this.panel2.TabIndex = 8;
+            // 
+            // btnVertialSame
+            // 
+            this.btnVertialSame.Location = new System.Drawing.Point(49, 1);
+            this.btnVertialSame.Name = "btnVertialSame";
+            this.btnVertialSame.Size = new System.Drawing.Size(85, 23);
+            this.btnVertialSame.TabIndex = 7;
+            this.btnVertialSame.Text = "中心垂直对齐";
+            this.btnVertialSame.UseVisualStyleBackColor = true;
+            this.btnVertialSame.Click += new System.EventHandler(this.btnVertialSame_Click);
+            // 
+            // btnSameMiddle
+            // 
+            this.btnSameMiddle.Location = new System.Drawing.Point(140, 1);
+            this.btnSameMiddle.Name = "btnSameMiddle";
+            this.btnSameMiddle.Size = new System.Drawing.Size(85, 23);
+            this.btnSameMiddle.TabIndex = 7;
+            this.btnSameMiddle.Text = "中心水平对齐";
+            this.btnSameMiddle.UseVisualStyleBackColor = true;
+            this.btnSameMiddle.Click += new System.EventHandler(this.btnSameMiddle_Click);
             // 
             // btnSameMax
             // 
@@ -162,25 +177,18 @@ namespace WinForm.MoveControl.Demo
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // btnSameMiddle
+            // panel1
             // 
-            this.btnSameMiddle.Location = new System.Drawing.Point(140, 1);
-            this.btnSameMiddle.Name = "btnSameMiddle";
-            this.btnSameMiddle.Size = new System.Drawing.Size(85, 23);
-            this.btnSameMiddle.TabIndex = 7;
-            this.btnSameMiddle.Text = "中心水平对齐";
-            this.btnSameMiddle.UseVisualStyleBackColor = true;
-            this.btnSameMiddle.Click += new System.EventHandler(this.btnSameMiddle_Click);
-            // 
-            // btnVertialSame
-            // 
-            this.btnVertialSame.Location = new System.Drawing.Point(49, 1);
-            this.btnVertialSame.Name = "btnVertialSame";
-            this.btnVertialSame.Size = new System.Drawing.Size(85, 23);
-            this.btnVertialSame.TabIndex = 7;
-            this.btnVertialSame.Text = "中心垂直对齐";
-            this.btnVertialSame.UseVisualStyleBackColor = true;
-            this.btnVertialSame.Click += new System.EventHandler(this.btnVertialSame_Click);
+            this.panel1.BackColor = System.Drawing.Color.DimGray;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 33);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(471, 273);
+            this.panel1.TabIndex = 3;
+            this.panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
+            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
+            this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
             // Form1
             // 

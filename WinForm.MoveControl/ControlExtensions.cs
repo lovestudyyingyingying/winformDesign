@@ -83,6 +83,7 @@ namespace WinForm.MoveControl
             //鼠标在控件上移动时
             MouseEventHandler mouseMove = (sender, e) =>
                {
+                   if (fControl == null) return;
                    Point currentPoint = new Point();
                    Cursor.Current = Cursors.SizeAll;
                    if (e.Button == MouseButtons.Left)
@@ -107,7 +108,7 @@ namespace WinForm.MoveControl
             MouseEventHandler mouseUp = (sender, e) =>
             {
                 //设置控件区域
-                fControl.SetControlRegion();
+                fControl?.SetControlRegion();
             };
             EventList.Add(control.Name + "MouseUp", mouseUp);
 

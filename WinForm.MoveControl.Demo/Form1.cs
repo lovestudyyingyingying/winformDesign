@@ -25,6 +25,8 @@ namespace WinForm.MoveControl.Demo
             uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0], 61451);
             uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[0], 61640);
             uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[1], 61490);
+            uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[2], 61489);
+
 
         }
         ControlManager ControlHelper = new ControlManager();
@@ -46,7 +48,9 @@ namespace WinForm.MoveControl.Demo
                 button2.Text = "disable";
                 foreach (Control item in panel1.Controls)
                 {
+                    if (item is FrameControl) continue;
                     item.SetMove();
+                    item.Enabled = false;
                 }
                 propertyGrid1.Visible = true;
                 uiNavMenu1.Visible = true;
@@ -57,6 +61,7 @@ namespace WinForm.MoveControl.Demo
                 foreach (Control item in panel1.Controls)
                 {
                     item.DisMove();
+                    item.Enabled = true;
                 }
                 propertyGrid1.Visible = false;
                 uiNavMenu1.Visible = false;
@@ -84,10 +89,16 @@ namespace WinForm.MoveControl.Demo
                 control = new System.Windows.Forms.Label();
                 control.Name = "label" + DateTime.Now.ToFileTimeUtc();
             }
+            else if (node.Text == "number")
+            {
+                control = new System.Windows.Forms.NumericUpDown();
+                control.Name = "number" + DateTime.Now.ToFileTimeUtc();
+            }
             control.Text = "未命名";
             control.Size = new System.Drawing.Size(100, 20);
             control.Location = new System.Drawing.Point(0, 0);
             control.SetMove();
+            control.Enabled = false;
             control.MouseClick += (obj, arg) =>
             {
 
@@ -156,6 +167,80 @@ namespace WinForm.MoveControl.Demo
                     {
                         frameControl.control.Location = new Point( center.X - frameControl.control.Width / 2, frameControl.control.Location.Y);
                         frameControl.Location = new Point( center.X - frameControl.Width / 2, frameControl.Location.Y);
+                    }
+                }
+            }
+        }
+
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            var location = e.Location;
+            foreach (Control control in panel1.Controls)
+            {
+                if (control is FrameControl) continue;
+                if (control.Visible && control.Bounds.Contains(location))
+                {
+                    string dicStr = control.Name + "MouseClick";
+                    if (ControlExtensions.EventList.ContainsKey(dicStr))
+                    {
+                        ControlExtensions.EventList[dicStr](control, e);
+                        propertyGrid1.SelectedObject = control;
+                    }
+                }
+
+            }
+        }
+        Control downControl = null;
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            var location = e.Location;
+            foreach (Control control in panel1.Controls)
+            {
+                if (control is FrameControl) continue;
+                if (control.Visible && control.Bounds.Contains(location))
+                {
+                    string dicStr = control.Name + "MouseDown";
+                    if (ControlExtensions.EventList.ContainsKey(dicStr))
+                    {
+                        ControlExtensions.EventList[dicStr](control, e);
+                        downControl = control;
+                    }
+                }
+            }
+        }
+
+        private void panel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            var location = e.Location;
+            foreach (Control control in panel1.Controls)
+            {
+                if (control is FrameControl) continue;
+                if (control.Visible && control.Bounds.Contains(location))
+                {
+                    string dicStr = control.Name + "MouseUp";
+                    if (ControlExtensions.EventList.ContainsKey(dicStr))
+                    {
+                        ControlExtensions.EventList[dicStr](control, e);
+                    }
+                }
+            }
+            downControl = null;
+        }
+
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (downControl == null) return;
+            var location = e.Location;
+            foreach (Control control in panel1.Controls)
+            {
+                if (control is FrameControl) continue;
+                if (downControl != control) continue;
+                if (control.Visible && control.Bounds.Contains(location))
+                {
+                    string dicStr = control.Name + "MouseMove";
+                    if (ControlExtensions.EventList.ContainsKey(dicStr))
+                    {
+                        ControlExtensions.EventList[dicStr](control, e);
                     }
                 }
             }
