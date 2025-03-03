@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Windows.Forms;
@@ -79,21 +80,31 @@ namespace WinForm.MoveControl.Demo
         {
             var node = uiNavMenu1.SelectedNode;
             Control control = null;
-            if (node.Text == "button")
-            {
-                control = new Button();
-                control.Name = "button" + DateTime.Now.ToFileTimeUtc();
-            }
-            else if (node.Text == "label")
-            {
-                control = new System.Windows.Forms.Label();
-                control.Name = "label" + DateTime.Now.ToFileTimeUtc();
-            }
-            else if (node.Text == "number")
-            {
-                control = new System.Windows.Forms.NumericUpDown();
-                control.Name = "number" + DateTime.Now.ToFileTimeUtc();
-            }
+            //if (node.Text == "button")
+            //{
+            //    control = new Button();
+            //    control.Name = "button" + DateTime.Now.ToFileTimeUtc();
+            //}
+            //else if (node.Text == "label")
+            //{
+            //    control = new System.Windows.Forms.Label();
+            //    control.Name = "label" + DateTime.Now.ToFileTimeUtc();
+            //}
+            //else if (node.Text == "number")
+            //{
+            //    control = new System.Windows.Forms.NumericUpDown();
+            //    control.Name = "number" + DateTime.Now.ToFileTimeUtc();
+            //}
+
+            string typeStr = node.Text;
+            string controlName = "System.Windows.Forms." + typeStr;
+            Assembly winFormsAssembly = typeof(Button).Assembly;
+            Type type = winFormsAssembly.GetType(controlName);
+           // Type test = Type.GetType(controlName);
+            if (type == null)
+                return;
+            control = (Control)Activator.CreateInstance(type);
+            control.Name = typeStr + DateTime.Now.ToFileTimeUtc();
             control.Text = "未命名";
             control.Size = new System.Drawing.Size(100, 20);
             control.Location = new System.Drawing.Point(0, 0);
@@ -144,7 +155,7 @@ namespace WinForm.MoveControl.Demo
                     if (control is FrameControl frameControl)
                     {
                         frameControl.control.Location = new Point(frameControl.control.Location.X, center.Y - frameControl.control.Height / 2);
-                        frameControl.Location = new Point( frameControl.Location.X, center.Y - frameControl.Height / 2);
+                        frameControl.Location = new Point(frameControl.Location.X, center.Y - frameControl.Height / 2);
                     }
                 }
             }
@@ -165,8 +176,8 @@ namespace WinForm.MoveControl.Demo
                     if (!control.Visible) continue;
                     if (control is FrameControl frameControl)
                     {
-                        frameControl.control.Location = new Point( center.X - frameControl.control.Width / 2, frameControl.control.Location.Y);
-                        frameControl.Location = new Point( center.X - frameControl.Width / 2, frameControl.Location.Y);
+                        frameControl.control.Location = new Point(center.X - frameControl.control.Width / 2, frameControl.control.Location.Y);
+                        frameControl.Location = new Point(center.X - frameControl.Width / 2, frameControl.Location.Y);
                     }
                 }
             }
@@ -245,6 +256,65 @@ namespace WinForm.MoveControl.Demo
                 }
             }
         }
+        bool m_mouseDown = false;
+        private void uiNavMenu1_MouseDown(object sender, MouseEventArgs e)
+        {
+            //if(uiNavMenu1.SelectedNode!=null)
+            //this.DoDragDrop(uiNavMenu1.SelectedNode.Text, DragDropEffects.Move);
+            //base.OnMouseDown(e);
+            m_mouseDown = true;
+        }
+
+        private void uiNavMenu1_MouseMove(object sender, MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            if (m_mouseDown)
+            {
+                this.DoDragDrop(uiNavMenu1.SelectedNode.Text, DragDropEffects.Move);
+            }
+            //base.OnMouseMove(e);
+
+        }
+
+
+
+        private void panel1_DragDrop(object sender, DragEventArgs e)
+        {
+            string type = e.Data.GetData(DataFormats.Text).ToString();
+        }
+
+        private void panel1_DragEnter(object sender, DragEventArgs e)
+        {
+
+            e.Effect = DragDropEffects.All;                                                              //
+        }
+
+        private void uiNavMenu1_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_mouseDown = false;
+        }
+
+        private void uiNavMenu1_MouseLeave(object sender, EventArgs e)
+        {
+            m_mouseDown = false;
+        }
+        protected override void WndProc(ref Message m)
+        {
+            const int WM_KEYDOWN = 0x0100; // 键盘按下消息
+
+            if (m.Msg == WM_KEYDOWN)
+            {
+                Keys key = (Keys)m.WParam;
+                if (key == Keys.Delete)
+                {
+                    MessageBox.Show("你按下了 Delete 键！");
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+
+
     }
 
 }

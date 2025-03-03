@@ -29,15 +29,14 @@ namespace WinForm.MoveControl.Demo
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("button");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("label");
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("number");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("控件", new System.Windows.Forms.TreeNode[] {
-            treeNode17,
-            treeNode18,
-            treeNode19});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Button");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Label");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("number");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("控件", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3});
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.uiNavMenu1 = new Sunny.UI.UINavMenu();
             this.flowLayoutPanel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -47,6 +46,7 @@ namespace WinForm.MoveControl.Demo
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.uiNavMenu1 = new Sunny.UI.UINavMenu();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -57,38 +57,8 @@ namespace WinForm.MoveControl.Demo
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Right;
             this.propertyGrid1.Location = new System.Drawing.Point(610, 0);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(153, 309);
+            this.propertyGrid1.Size = new System.Drawing.Size(153, 336);
             this.propertyGrid1.TabIndex = 3;
-            // 
-            // uiNavMenu1
-            // 
-            this.uiNavMenu1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.uiNavMenu1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.uiNavMenu1.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-            this.uiNavMenu1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiNavMenu1.FullRowSelect = true;
-            this.uiNavMenu1.HotTracking = true;
-            this.uiNavMenu1.ItemHeight = 30;
-            this.uiNavMenu1.Location = new System.Drawing.Point(0, 0);
-            this.uiNavMenu1.Name = "uiNavMenu1";
-            treeNode17.ImageIndex = 61451;
-            treeNode17.Name = "button";
-            treeNode17.Text = "button";
-            treeNode18.Name = "label";
-            treeNode18.Text = "label";
-            treeNode19.Name = "number";
-            treeNode19.Text = "number";
-            treeNode20.Name = "控件";
-            treeNode20.Text = "控件";
-            this.uiNavMenu1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode20});
-            this.uiNavMenu1.ShowLines = false;
-            this.uiNavMenu1.ShowPlusMinus = false;
-            this.uiNavMenu1.ShowRootLines = false;
-            this.uiNavMenu1.Size = new System.Drawing.Size(133, 309);
-            this.uiNavMenu1.TabIndex = 4;
-            this.uiNavMenu1.TipsFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiNavMenu1.DoubleClick += new System.EventHandler(this.uiNavMenu1_DoubleClick);
             // 
             // flowLayoutPanel1
             // 
@@ -96,7 +66,7 @@ namespace WinForm.MoveControl.Demo
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(133, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(477, 309);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(477, 336);
             this.flowLayoutPanel1.TabIndex = 5;
             // 
             // tableLayoutPanel1
@@ -111,7 +81,7 @@ namespace WinForm.MoveControl.Demo
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(477, 309);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(477, 336);
             this.tableLayoutPanel1.TabIndex = 8;
             // 
             // panel2
@@ -179,22 +149,59 @@ namespace WinForm.MoveControl.Demo
             // 
             // panel1
             // 
+            this.panel1.AllowDrop = true;
             this.panel1.BackColor = System.Drawing.Color.DimGray;
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 33);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(471, 273);
+            this.panel1.Size = new System.Drawing.Size(471, 300);
             this.panel1.TabIndex = 3;
+            this.panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.panel1_DragDrop);
+            this.panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.panel1_DragEnter);
             this.panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
+            // uiNavMenu1
+            // 
+            this.uiNavMenu1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.uiNavMenu1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.uiNavMenu1.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
+            this.uiNavMenu1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiNavMenu1.FullRowSelect = true;
+            this.uiNavMenu1.HotTracking = true;
+            this.uiNavMenu1.ItemHeight = 30;
+            this.uiNavMenu1.Location = new System.Drawing.Point(0, 0);
+            this.uiNavMenu1.Name = "uiNavMenu1";
+            treeNode1.ImageIndex = 61451;
+            treeNode1.Name = "button";
+            treeNode1.Text = "Button";
+            treeNode2.Name = "label";
+            treeNode2.Text = "Label";
+            treeNode3.Name = "number";
+            treeNode3.Text = "number";
+            treeNode4.Name = "控件";
+            treeNode4.Text = "控件";
+            this.uiNavMenu1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode4});
+            this.uiNavMenu1.ShowLines = false;
+            this.uiNavMenu1.ShowPlusMinus = false;
+            this.uiNavMenu1.ShowRootLines = false;
+            this.uiNavMenu1.Size = new System.Drawing.Size(133, 336);
+            this.uiNavMenu1.TabIndex = 4;
+            this.uiNavMenu1.TipsFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiNavMenu1.DoubleClick += new System.EventHandler(this.uiNavMenu1_DoubleClick);
+            this.uiNavMenu1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.uiNavMenu1_MouseDown);
+            this.uiNavMenu1.MouseLeave += new System.EventHandler(this.uiNavMenu1_MouseLeave);
+            this.uiNavMenu1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.uiNavMenu1_MouseMove);
+            this.uiNavMenu1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.uiNavMenu1_MouseUp);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(763, 309);
+            this.ClientSize = new System.Drawing.Size(763, 336);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.uiNavMenu1);
             this.Controls.Add(this.propertyGrid1);
@@ -210,7 +217,6 @@ namespace WinForm.MoveControl.Demo
 
         #endregion
         private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private Sunny.UI.UINavMenu uiNavMenu1;
         private System.Windows.Forms.Panel flowLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -220,6 +226,7 @@ namespace WinForm.MoveControl.Demo
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button btnSameMiddle;
         private System.Windows.Forms.Button btnVertialSame;
+        private Sunny.UI.UINavMenu uiNavMenu1;
     }
 }
 

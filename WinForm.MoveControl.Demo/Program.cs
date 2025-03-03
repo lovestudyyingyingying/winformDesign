@@ -15,7 +15,9 @@ namespace WinForm.MoveControl.Demo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            GlobalKeyboardHook.Start();
             Application.Run(new Form1());
+            GlobalKeyboardHook.Stop();
         }
     }
 }
