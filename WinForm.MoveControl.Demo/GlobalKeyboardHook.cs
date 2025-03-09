@@ -14,10 +14,11 @@ namespace WinForm.MoveControl.Demo
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
         private static IntPtr _hookID = IntPtr.Zero;
-
+        private static LowLevelKeyboardProc _proc;
         public static void Start()
         {
-            _hookID = SetHook(HookCallback);
+            _proc = HookCallback;
+            _hookID = SetHook(_proc);
         }
 
         public static void Stop()
@@ -36,16 +37,14 @@ namespace WinForm.MoveControl.Demo
         }
 
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
-
+      
+        public static event EventHandler<Keys> OnKeyDown;
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
-                if ((Keys)vkCode == Keys.Delete)
-                {
-                    MessageBox.Show("你全局按下了 Delete 键！");
-                }
+                OnKeyDown.Invoke(null, (Keys)vkCode);
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }

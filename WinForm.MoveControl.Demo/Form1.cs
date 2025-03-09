@@ -1,4 +1,5 @@
-﻿using Sunny.UI.Win32;
+﻿using Sunny.UI;
+using Sunny.UI.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,59 +13,114 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace WinForm.MoveControl.Demo
 {
-    public partial class Form1 : Form
+    public partial class Form1 : UIForm
     {
+        /// <summary>
+        /// 控件类型名称如：Sunny.UI
+        /// </summary>
+        [Category("自定义属性"), DisplayName("控件类型名称"), Description("控件类型名称如：Sunny.UI")]
+        public string ContorlTypeName { get; set; } = "Sunny.UI";
+
+        /// <summary>
+        /// 控件类型名称如：Sunny
+        /// </summary>
+        [Category("自定义属性"), DisplayName("控件可链接动态库dll名称"), Description("可链接动态库dll文件名称")]
+        public string ContorlDllName { get; set; } = "SunnyUI";
+
         public Form1()
         {
             InitializeComponent();
             ControlHelper.GetContorl(panel1);
             ControlHelper.propertyGrid = this.propertyGrid1;
             uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0], 61451);
-            uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[0], 61640);
-            uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[1], 61490);
-            uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[2], 61489);
+            //uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[0], 61640);
+            //uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[1], 61490);
+            //uiNavMenu1.SetNodeSymbol(uiNavMenu1.Nodes[0].Nodes[2], 61489);
 
+            //在左侧菜单栏加载控件
+            uiNavMenu1.Nodes[0].Nodes.Clear();
+
+            var assList = Assembly.Load(ContorlDllName).GetTypes();
+            foreach (var ass in assList)
+            {
+                if (ass.Namespace == ContorlTypeName && !ass.IsSealed && ass.IsPublic)
+                {
+                    var isContorl = CheckTypeIsContorl(ass);
+                    if (isContorl)
+                        uiNavMenu1.Nodes[0].Nodes.Add(ass.Name);
+                }
+            }
+            foreach (UIImageButton control in panel2.Controls)
+            {
+                UIToolTip tip = new UIToolTip();
+                tip.SetToolTip(control, control.TagString);
+            }
+            GlobalKeyboardHook.OnKeyDown += (sender, e) =>
+            {
+                if (e != Keys.Delete) return;
+
+                List<Control> list = GetSelectControls();
+                foreach (Control control in list)
+                {
+                    panel1.Controls.Remove(control);
+
+                }
+            };
+            new ResizableControlHelper(uiNavMenu1);
+            new ResizableControlHelper(uiPanel1);
 
         }
         ControlManager ControlHelper = new ControlManager();
         private void Form1_Load(object sender, EventArgs e)
         {
-            //button1.DisMove();
-            //button1.SetMove();
 
-            //label1.SetMove();
-
-            propertyGrid1.Visible = false;
+            uiPanel1.Visible = false;
             uiNavMenu1.Visible = false;
         }
-
-        private void button2_Click(object sender, EventArgs e)
+        private bool CheckTypeIsContorl(Type type)
         {
-            if (button2.Text == "启用")
+            if (type == null)
+                return false;
+            if (type.Name.Contains("Form"))
+                return false;
+            if (type.Name == "Control")
+                return true;
+            else
+                return CheckTypeIsContorl(type.BaseType);
+
+
+        }
+        private void btnLock_Click(object sender, EventArgs e)
+        {
+            if (btnLock.TagString == "启用")
             {
-                button2.Text = "disable";
+                btnLock.TagString = "禁用";
+                btnLock.Image = Properties.Resources.启用;
                 foreach (Control item in panel1.Controls)
                 {
                     if (item is FrameControl) continue;
                     item.SetMove();
                     item.Enabled = false;
                 }
-                propertyGrid1.Visible = true;
+                uiPanel1.Visible = true;
                 uiNavMenu1.Visible = true;
             }
             else
             {
-                button2.Text = "启用";
+                btnLock.TagString = "启用";
+                btnLock.Image = Properties.Resources.禁用;
+
                 foreach (Control item in panel1.Controls)
                 {
                     item.DisMove();
                     item.Enabled = true;
                 }
-                propertyGrid1.Visible = false;
+                uiPanel1.Visible = false;
                 uiNavMenu1.Visible = false;
             }
         }
@@ -80,27 +136,12 @@ namespace WinForm.MoveControl.Demo
         {
             var node = uiNavMenu1.SelectedNode;
             Control control = null;
-            //if (node.Text == "button")
-            //{
-            //    control = new Button();
-            //    control.Name = "button" + DateTime.Now.ToFileTimeUtc();
-            //}
-            //else if (node.Text == "label")
-            //{
-            //    control = new System.Windows.Forms.Label();
-            //    control.Name = "label" + DateTime.Now.ToFileTimeUtc();
-            //}
-            //else if (node.Text == "number")
-            //{
-            //    control = new System.Windows.Forms.NumericUpDown();
-            //    control.Name = "number" + DateTime.Now.ToFileTimeUtc();
-            //}
 
             string typeStr = node.Text;
-            string controlName = "System.Windows.Forms." + typeStr;
-            Assembly winFormsAssembly = typeof(Button).Assembly;
+            string controlName = ContorlTypeName + "." + typeStr;
+            Assembly winFormsAssembly = Assembly.Load(ContorlDllName);
             Type type = winFormsAssembly.GetType(controlName);
-           // Type test = Type.GetType(controlName);
+            // Type test = Type.GetType(controlName);
             if (type == null)
                 return;
             control = (Control)Activator.CreateInstance(type);
@@ -267,6 +308,9 @@ namespace WinForm.MoveControl.Demo
 
         private void uiNavMenu1_MouseMove(object sender, MouseEventArgs e)
         {
+            if (uiNavMenu1.SelectedNode == null) return;
+            if (Cursor.Current != Cursors.Default) return;
+
             base.OnMouseMove(e);
             if (m_mouseDown)
             {
@@ -280,13 +324,35 @@ namespace WinForm.MoveControl.Demo
 
         private void panel1_DragDrop(object sender, DragEventArgs e)
         {
-            string type = e.Data.GetData(DataFormats.Text).ToString();
+            string typeStr = e.Data.GetData(DataFormats.Text).ToString();
+            Control control = null;
+            string controlName = ContorlTypeName + "." + typeStr;
+            Assembly winFormsAssembly =Assembly.Load(ContorlDllName);
+            Type type = winFormsAssembly.GetType(controlName);
+            if (type == null) return;
+            control = (Control)Activator.CreateInstance(type);
+            control.Name = typeStr + DateTime.Now.ToFileTimeUtc();
+            control.Text = "未命名";
+            control.Size = new System.Drawing.Size(100, 20);
+            control.SetMove();
+            control.Enabled = false;
+
+            control.MouseClick += (obj, arg) =>
+            {
+
+                propertyGrid1.SelectedObject = obj;
+            };
+            control.BringToFront();
+            panel1.Controls.Add(control);
+            Point clientPos = control.Parent.PointToClient(Cursor.Position);
+            control.Location = clientPos;
         }
 
         private void panel1_DragEnter(object sender, DragEventArgs e)
         {
 
-            e.Effect = DragDropEffects.All;                                                              //
+            e.Effect = DragDropEffects.All; //
+
         }
 
         private void uiNavMenu1_MouseUp(object sender, MouseEventArgs e)
@@ -298,23 +364,66 @@ namespace WinForm.MoveControl.Demo
         {
             m_mouseDown = false;
         }
-        protected override void WndProc(ref Message m)
-        {
-            const int WM_KEYDOWN = 0x0100; // 键盘按下消息
 
-            if (m.Msg == WM_KEYDOWN)
+        private void btnMiddleDist_Click(object sender, EventArgs e)
+        {
+            List<Control> listControl = GetSelectControls(false);
+            listControl = listControl.OrderBy(x => x.Location.Y).ToList();
+            Control maxCon = listControl.Last();
+            Control minCon = listControl.First();
+            listControl.Remove(minCon);
+            listControl.Remove(maxCon);
+            int minY = minCon.Location.Y + minCon.Height;
+            int maxY = maxCon.Location.Y;
+            int dist = maxY - minY - listControl.Sum(x => x.Size.Height);
+            int single = dist / (listControl.Count + 1);
+            int lastHeigh = minY;
+            foreach (Control control in listControl)
             {
-                Keys key = (Keys)m.WParam;
-                if (key == Keys.Delete)
-                {
-                    MessageBox.Show("你按下了 Delete 键！");
-                }
+                control.Location = new Point(control.Location.X, minY + single);
+                minY = control.Location.Y + control.Height;
             }
 
-            base.WndProc(ref m);
+        }
+        private List<Control> GetSelectControls(bool isGetFrame = true)
+        {
+            List<Control> list = new List<Control>();
+            foreach (Control control in panel1.Controls)
+            {
+                if (!control.Visible) continue;
+
+                if (control is FrameControl frameControl)
+                {
+                    if (isGetFrame)
+                        list.Add(frameControl);
+                    list.Add(frameControl.control);
+                }
+            }
+            return list;
         }
 
+        private void btnHorSort_Click(object sender, EventArgs e)
+        {
+            List<Control> listControl = GetSelectControls(false);
+            if (listControl.Count < 1) return;
+            listControl = listControl.OrderBy(x => x.Location.X).ToList();
+            Control maxCon = listControl.Last();
+            Control minCon = listControl.First();
 
+            listControl.Remove(minCon);
+            listControl.Remove(maxCon);
+            int minX = minCon.Location.X + minCon.Width;
+            int maxX = maxCon.Location.X;
+            int dist = maxX - minX - listControl.Sum(x => x.Size.Width);
+            int single = dist / (listControl.Count + 1);
+            int lastWidth = minX;
+            foreach (Control control in listControl)
+            {
+                control.Location = new Point(minX + single, control.Location.Y);
+                minX = control.Location.X + control.Width;
+            }
+
+        }
     }
 
 }

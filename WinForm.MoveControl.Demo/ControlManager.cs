@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Sunny.UI;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace WinForm.MoveControl.Demo
@@ -21,15 +24,14 @@ namespace WinForm.MoveControl.Demo
             foreach (var item in con)
             {
                 Control control = new Control();
-                if (item.Type == "Button")
-                {
-                    control = new Button();
-
-                }
-                if (item.Type == "Label")
-                {
-                    control = new System.Windows.Forms.Label();
-                }
+                string typeStr = item.Type;
+                string controlName = "Sunny.UI." + typeStr;
+                Assembly winFormsAssembly = typeof(UIButton).Assembly;
+                Type type = winFormsAssembly.GetType(controlName);
+                // Type test = Type.GetType(controlName);
+                if (type == null)
+                    return;
+                control = (Control)Activator.CreateInstance(type);
                 control.Name = item.Name;
                 control.Text = item.Text;
                 control.Location = item.Location;

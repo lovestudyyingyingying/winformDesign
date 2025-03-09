@@ -35,6 +35,8 @@
             treeNode1,
             treeNode2,
             treeNode3});
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("UIButton");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("UILabel");
             this.uiNavMenu1 = new Sunny.UI.UINavMenu();
             this.SuspendLayout();
             // 
@@ -58,8 +60,14 @@
             treeNode3.Text = "number";
             treeNode4.Name = "控件";
             treeNode4.Text = "控件";
+            treeNode5.Name = "UIButton";
+            treeNode5.Text = "UIButton";
+            treeNode6.Name = "UILabel";
+            treeNode6.Text = "UILabel";
             this.uiNavMenu1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode4,
+            treeNode5,
+            treeNode6});
             this.uiNavMenu1.ShowLines = false;
             this.uiNavMenu1.ShowPlusMinus = false;
             this.uiNavMenu1.ShowRootLines = false;
@@ -74,6 +82,7 @@
             this.ClientSize = new System.Drawing.Size(143, 450);
             this.Controls.Add(this.uiNavMenu1);
             this.Name = "FrmContent";
+            this.TabText = "FrmContent";
             this.Text = "FrmContent";
             this.ResumeLayout(false);
 
